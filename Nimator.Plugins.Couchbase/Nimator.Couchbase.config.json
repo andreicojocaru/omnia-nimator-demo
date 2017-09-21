@@ -1,0 +1,64 @@
+﻿{
+  "Notifiers": [
+    {
+      "$type": "Nimator.Settings.ConsoleSettings, Nimator",
+      "Threshold": "Okay"
+    }
+  ],
+  "Layers": [
+    {
+      "Name": "Availability",
+      "Checks": [
+        {
+          "$type": "Nimator.Plugins.Couchbase.Settings.ServerAvailabilityCheckSettings, Nimator.Plugins.Couchbase",
+          "ServerUrl": "http://localhost:8091"
+        },
+        {
+          "$type": "Nimator.Plugins.Couchbase.Settings.PoolAvailabilityCheckSettings, Nimator.Plugins.Couchbase",
+          "ServerUrl": "http://localhost:8091",
+          "PoolName": "default"
+        },
+        {
+          "$type": "Nimator.Plugins.Couchbase.Settings.BucketAvailabilityCheckSettings, Nimator.Plugins.Couchbase",
+          "ServerUrl": "http://localhost:8091",
+          "PoolName": "default", // this is optional
+          "BucketName": "OMNIA",
+          "Credentials": {
+            "Username": "Administrator",
+            "Password": "R1M56&YHzl2w"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "Memory Usage",
+      "Checks": [
+        {
+          "$type": "Nimator.Plugins.Couchbase.Settings.MemoryUsageCheckSettings, Nimator.Plugins.Couchbase",
+          "ServerUrl": "http://localhost:8091",
+          "BucketName": "OMNIA",
+          "AvailableMemoryThresholdPercentage": 15,
+          "Credentials": {
+            "Username": "Administrator",
+            "Password": "R1M56&YHzl2w"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "Bucket Size",
+      "Checks": [
+        {
+          "$type": "Nimator.Plugins.Couchbase.Settings.BucketSizeCheckSettings, Nimator.Plugins.Couchbase",
+          "ServerUrl": "http://localhost:8091",
+          "BucketName": "OMNIA",
+          "MaxRecords": 100000,
+          "Credentials": {
+            "Username": "Administrator",
+            "Password": "R1M56&YHzl2w"
+          }
+        }
+      ]
+    }
+  ]
+}

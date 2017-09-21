@@ -32,6 +32,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Nimator, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nimator.0.2.0\lib\net451\Nimator.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,11 +51,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Checks\BucketSizeCheck.cs" />
+    <Compile Include="Checks\ServerAvailabilityCheck.cs" />
+    <Compile Include="Checks\PoolAvailabilityCheck.cs" />
+    <Compile Include="Checks\BucketAvailabilityCheck.cs" />
+    <Compile Include="Checks\MemoryUsageCheck.cs" />
+    <Compile Include="CouchbaseDataRetriever.cs" />
+    <Compile Include="ICouchbaseDataRetriever.cs" />
+    <Compile Include="Models\BasicAuthorizationCredentials.cs" />
+    <Compile Include="Models\BucketSizeModel.cs" />
+    <Compile Include="Models\CouchbaseDataRetrieverSettings.cs" />
+    <Compile Include="Models\MemoryUsageModel.cs" />
+    <Compile Include="Models\Raw\RawBucketMemory.cs" />
+    <Compile Include="Models\Raw\RawBucketUsage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\BucketAvailabilityCheckSettings.cs" />
+    <Compile Include="Settings\BucketSizeCheckSettings.cs" />
+    <Compile Include="Settings\MemoryUsageCheckSettings.cs" />
+    <Compile Include="Settings\PoolAvailabilityCheckSettings.cs" />
+    <Compile Include="Settings\ServerAvailabilityCheckSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Content Include="Nimator.Couchbase.config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
