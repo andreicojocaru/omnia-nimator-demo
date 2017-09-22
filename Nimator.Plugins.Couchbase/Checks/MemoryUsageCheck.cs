@@ -38,7 +38,7 @@ namespace Nimator.Plugins.Couchbase.Checks
 
                 var node = rawModel.Nodes.First();
 
-                var model = new MemoryUsageModel
+                var model = new MemoryUsageInternalModel
                 {
                     Used = node.SystemStats.Mem_Total - node.SystemStats.Mem_Free,
                     Total = node.SystemStats.Mem_Total

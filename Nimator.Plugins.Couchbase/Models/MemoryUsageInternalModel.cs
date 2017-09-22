@@ -1,6 +1,6 @@
 ﻿namespace Nimator.Plugins.Couchbase.Models
 {
-    internal class MemoryUsageModel
+    internal class MemoryUsageInternalModel
     {
         public long Used { get; set; }
 
