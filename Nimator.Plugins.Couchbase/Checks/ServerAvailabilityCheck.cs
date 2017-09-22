@@ -1,20 +1,30 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Nimator.Plugins.Couchbase.Models.Settings;
 
 namespace Nimator.Plugins.Couchbase.Checks
 {
     public class ServerAvailabilityCheck : ICheck
     {
-        private readonly ICouchbaseDataRetriever _dataRetriever;
+        private readonly CouchbaseClusterSettings _settings;
 
-        public ServerAvailabilityCheck(ICouchbaseDataRetriever dataRetriever)
+        public ServerAvailabilityCheck(CouchbaseClusterSettings settings)
         {
-            _dataRetriever = dataRetriever;
+            if (settings == null || settings.AreBasicSettingsEmpty)
+            {
+                throw new ArgumentException(nameof(settings));
+            }
+
+            _settings = settings;
         }
 
         public async Task<ICheckResult> RunAsync()
         {
-            var isAvailable = await _dataRetriever.CheckServerAvailabilityAsync();
-            return new CheckResult(ShortName, isAvailable ? NotificationLevel.Okay : NotificationLevel.Critical);
+            using (var httpClient = HttpClientFactory.GetAuthorizedHttpClient(_settings.Credentials))
+            {
+                var response = await httpClient.GetAsync(_settings.ServerUrl);
+                return new CheckResult(ShortName, response.IsSuccessStatusCode ? NotificationLevel.Okay : NotificationLevel.Critical);
+            }
         }
 
         public string ShortName => nameof(ServerAvailabilityCheck);

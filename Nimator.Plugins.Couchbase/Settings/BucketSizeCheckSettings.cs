@@ -1,5 +1,6 @@
 ﻿using Nimator.Plugins.Couchbase.Checks;
 using Nimator.Plugins.Couchbase.Models;
+using Nimator.Plugins.Couchbase.Models.Settings;
 
 namespace Nimator.Plugins.Couchbase.Settings
 {
@@ -17,13 +18,24 @@ namespace Nimator.Plugins.Couchbase.Settings
 
         public ICheck ToCheck()
         {
-            var settings = new CouchbaseDataRetrieverSettings
+            var settings = new CouchbaseBucketSizeSettings
             {
+                ServerUrl = ServerUrl,
                 Credentials = Credentials,
-                ServerUrl = ServerUrl
-            }; 
+                MaxRecords = MaxRecords
+            };
 
-            return new BucketSizeCheck(new CouchbaseDataRetriever(settings), MaxRecords, BucketName, PoolName);
+            if (!string.IsNullOrEmpty(PoolName))
+            {
+                settings.PoolName = PoolName;
+            }
+
+            if (!string.IsNullOrEmpty(BucketName))
+            {
+                settings.BucketName = BucketName;
+            }
+
+            return new BucketSizeCheck(settings);
         }
     }
 }

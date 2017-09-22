@@ -1,36 +1,46 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Nimator.Plugins.Couchbase.Models.Raw;
+using Nimator.Plugins.Couchbase.Models.Settings;
 
 namespace Nimator.Plugins.Couchbase.Checks
 {
     public class BucketSizeCheck : ICheck
     {
-        private readonly ICouchbaseDataRetriever _dataRetriever;
-        private readonly int _maxRecords;
+        private readonly CouchbaseBucketSizeSettings _settings;
 
-        private readonly string _bucketName;
-        private readonly string _poolName;
-
-        public BucketSizeCheck(ICouchbaseDataRetriever dataRetriever, int maxRecords, string bucketName, string poolName)
+        public BucketSizeCheck(CouchbaseBucketSizeSettings settings)
         {
-            _dataRetriever = dataRetriever;
-            _maxRecords = maxRecords;
+            if (settings == null || settings.AreBasicSettingsEmpty)
+            {
+                throw new ArgumentException(nameof(settings));
+            }
 
-            _bucketName = bucketName;
-            _poolName = poolName;
+            _settings = settings;
         }
 
         public async Task<ICheckResult> RunAsync()
         {
-            var sizeModel = await _dataRetriever.RetrieveBucketRecordsAsync(_bucketName, _poolName);
-
-            NotificationLevel level = NotificationLevel.Okay;
-
-            if (sizeModel.Total > _maxRecords)
+            using (var httpClient = HttpClientFactory.GetAuthorizedHttpClient(_settings.Credentials))
             {
-                level = NotificationLevel.Warning;
-            }
+                var url = $"{_settings.ServerUrl}/pools/{_settings.PoolName}/buckets/{_settings.BucketName}";
+                var response = await httpClient.GetAsync(url);
 
-            return new CheckResult(ShortName, level);
+                response.EnsureSuccessStatusCode();
+
+                var content = await response.Content.ReadAsStringAsync();
+                var rawModel = JsonConvert.DeserializeObject<RawBucketUsage>(content);
+
+                var level = NotificationLevel.Okay;
+
+                if (rawModel.BasicStats.ItemCount > _settings.MaxRecords)
+                {
+                    level = NotificationLevel.Warning;
+                }
+
+                return new CheckResult(ShortName, level);
+            }
         }
 
         public string ShortName => nameof(BucketSizeCheck);

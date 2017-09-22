@@ -1,26 +1,32 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Nimator.Plugins.Couchbase.Models.Settings;
 
 namespace Nimator.Plugins.Couchbase.Checks
 {
     public class BucketAvailabilityCheck : ICheck
     {
-        private readonly ICouchbaseDataRetriever _dataRetriever;
+        private readonly CouchbaseClusterSettings _settings;
 
-        private readonly string _bucketName;
-        private readonly string _poolName;
-
-        public BucketAvailabilityCheck(ICouchbaseDataRetriever dataRetriever, string bucketName, string poolName)
+        public BucketAvailabilityCheck(CouchbaseClusterSettings settings)
         {
-            _dataRetriever = dataRetriever;
+            if (settings == null || settings.AreBasicSettingsEmpty)
+            {
+                throw new ArgumentException(nameof(_settings));
+            }
 
-            _bucketName = bucketName;
-            _poolName = poolName;
+            _settings = settings;
         }
 
         public async Task<ICheckResult> RunAsync()
         {
-            var isAvailable = await _dataRetriever.CheckBucketAvailabilityAsync(_bucketName, _poolName);
-            return new CheckResult(ShortName, isAvailable ? NotificationLevel.Okay : NotificationLevel.Critical);
+            using (var httpClient = HttpClientFactory.GetAuthorizedHttpClient(_settings.Credentials))
+            {
+                var url = $"{_settings.ServerUrl}/pools/{_settings.PoolName}/buckets/{_settings.BucketName}";
+
+                var response = await httpClient.GetAsync(url);
+                return new CheckResult(ShortName, response.IsSuccessStatusCode ? NotificationLevel.Okay : NotificationLevel.Critical);
+            }
         }
 
         public string ShortName => nameof(BucketAvailabilityCheck);

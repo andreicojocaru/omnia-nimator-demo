@@ -1,5 +1,6 @@
 ﻿using Nimator.Plugins.Couchbase.Checks;
 using Nimator.Plugins.Couchbase.Models;
+using Nimator.Plugins.Couchbase.Models.Settings;
 
 namespace Nimator.Plugins.Couchbase.Settings
 {
@@ -11,13 +12,13 @@ namespace Nimator.Plugins.Couchbase.Settings
 
         public ICheck ToCheck()
         {
-            var settings = new CouchbaseDataRetrieverSettings
+            var settings = new CouchbaseClusterSettings
             {
-                Credentials = Credentials,
-                ServerUrl = ServerUrl
+                ServerUrl = ServerUrl,
+                Credentials = Credentials
             };
 
-            return new ServerAvailabilityCheck(new CouchbaseDataRetriever(settings));
+            return new ServerAvailabilityCheck(settings);
         }
     }
 }

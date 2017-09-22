@@ -5,6 +5,8 @@ namespace Nimator.Plugins.Couchbase.Models
 {
     public class BasicAuthorizationCredentials
     {
+        private string _base64String;
+
         public string Username { get; set; }
 
         public string Password { get; set; }
@@ -15,8 +17,13 @@ namespace Nimator.Plugins.Couchbase.Models
         {
             get
             {
-                var bytes = Encoding.ASCII.GetBytes($"{Username}:{Password}");
-                return Convert.ToBase64String(bytes);
+                if (string.IsNullOrEmpty(_base64String))
+                {
+                    var bytes = Encoding.ASCII.GetBytes($"{Username}:{Password}");
+                    _base64String = Convert.ToBase64String(bytes);
+                }
+
+                return _base64String;
             }
         }
     }

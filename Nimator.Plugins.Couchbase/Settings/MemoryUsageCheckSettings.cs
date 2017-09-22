@@ -1,9 +1,10 @@
 ﻿using Nimator.Plugins.Couchbase.Checks;
 using Nimator.Plugins.Couchbase.Models;
+using Nimator.Plugins.Couchbase.Models.Settings;
 
 namespace Nimator.Plugins.Couchbase.Settings
 {
-    class MemoryUsageCheckSettings : ICheckSettings
+    public class MemoryUsageCheckSettings : ICheckSettings
     {
         public string ServerUrl { get; set; }
 
@@ -17,13 +18,24 @@ namespace Nimator.Plugins.Couchbase.Settings
 
         public ICheck ToCheck()
         {
-            var settings = new CouchbaseDataRetrieverSettings
+            var settings = new CouchbaseMemoryUsageSettings
             {
+                ServerUrl = ServerUrl,
                 Credentials = Credentials,
-                ServerUrl = ServerUrl
+                AvailableMemoryThresholdPercentage = AvailableMemoryThresholdPercentage
             };
 
-            return new MemoryUsageCheck(new CouchbaseDataRetriever(settings), AvailableMemoryThresholdPercentage, BucketName, PoolName);
+            if (!string.IsNullOrEmpty(PoolName))
+            {
+                settings.PoolName = PoolName;
+            }
+
+            if (!string.IsNullOrEmpty(BucketName))
+            {
+                settings.BucketName = BucketName;
+            }
+
+            return new MemoryUsageCheck(settings);
         }
     }
 }
