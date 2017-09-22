@@ -24,6 +24,7 @@
           "PoolName": "default", // this is optional
           "BucketName": "OMNIA",
           "Credentials": {
+            "$type": "Nimator.Plugins.Couchbase.Models.Credentials.BasicAuthorizationCredentials, Nimator.Plugins.Couchbase",
             "Username": "Administrator",
             "Password": "R1M56&YHzl2w"
           }
@@ -39,6 +40,7 @@
           "BucketName": "OMNIA",
           "AvailableMemoryThresholdPercentage": 15,
           "Credentials": {
+            "$type": "Nimator.Plugins.Couchbase.Models.Credentials.BasicAuthorizationCredentials, Nimator.Plugins.Couchbase",
             "Username": "Administrator",
             "Password": "R1M56&YHzl2w"
           }
@@ -54,6 +56,7 @@
           "BucketName": "OMNIA",
           "MaxRecords": 100000,
           "Credentials": {
+            "$type": "Nimator.Plugins.Couchbase.Models.Credentials.BasicAuthorizationCredentials, Nimator.Plugins.Couchbase",
             "Username": "Administrator",
             "Password": "R1M56&YHzl2w"
           }

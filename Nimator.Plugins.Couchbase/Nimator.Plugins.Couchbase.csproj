@@ -56,9 +56,11 @@
     <Compile Include="Checks\PoolAvailabilityCheck.cs" />
     <Compile Include="Checks\BucketAvailabilityCheck.cs" />
     <Compile Include="Checks\MemoryUsageCheck.cs" />
-    <Compile Include="HttpClientFactory.cs" />
-    <Compile Include="Models\BasicAuthorizationCredentials.cs" />
+    <Compile Include="AuthorizedHttpClientFactory.cs" />
+    <Compile Include="IHttpClientFactory.cs" />
+    <Compile Include="Models\Credentials\BasicAuthorizationCredentials.cs" />
     <Compile Include="Models\BucketSizeModel.cs" />
+    <Compile Include="Models\Credentials\IAuthorizationCredentials.cs" />
     <Compile Include="Models\Settings\CouchbaseBucketSizeSettings.cs" />
     <Compile Include="Models\Settings\CouchbaseClusterSettings.cs" />
     <Compile Include="Models\MemoryUsageModel.cs" />

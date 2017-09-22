@@ -1,5 +1,5 @@
 ﻿using Nimator.Plugins.Couchbase.Checks;
-using Nimator.Plugins.Couchbase.Models;
+using Nimator.Plugins.Couchbase.Models.Credentials;
 using Nimator.Plugins.Couchbase.Models.Settings;
 
 namespace Nimator.Plugins.Couchbase.Settings
@@ -21,7 +21,6 @@ namespace Nimator.Plugins.Couchbase.Settings
             var settings = new CouchbaseBucketSizeSettings
             {
                 ServerUrl = ServerUrl,
-                Credentials = Credentials,
                 MaxRecords = MaxRecords
             };
 
@@ -35,7 +34,7 @@ namespace Nimator.Plugins.Couchbase.Settings
                 settings.BucketName = BucketName;
             }
 
-            return new BucketSizeCheck(settings);
+            return new BucketSizeCheck(new AuthorizedHttpClientFactory(Credentials), settings);
         }
     }
 }

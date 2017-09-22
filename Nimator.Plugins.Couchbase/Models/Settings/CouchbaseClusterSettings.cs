@@ -4,8 +4,6 @@
     {
         public string ServerUrl { get; set; }
 
-        public BasicAuthorizationCredentials Credentials { get; set; }
-
         public string PoolName { get; set; } = "default";
 
         public string BucketName { get; set; } = "default";

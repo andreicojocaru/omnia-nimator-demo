@@ -1,5 +1,5 @@
 ﻿using Nimator.Plugins.Couchbase.Checks;
-using Nimator.Plugins.Couchbase.Models;
+using Nimator.Plugins.Couchbase.Models.Credentials;
 using Nimator.Plugins.Couchbase.Models.Settings;
 
 namespace Nimator.Plugins.Couchbase.Settings
@@ -18,8 +18,7 @@ namespace Nimator.Plugins.Couchbase.Settings
         {
             var settings = new CouchbaseClusterSettings
             {
-                ServerUrl = ServerUrl,
-                Credentials = Credentials
+                ServerUrl = ServerUrl
             };
 
             if (!string.IsNullOrEmpty(PoolName))
@@ -32,7 +31,7 @@ namespace Nimator.Plugins.Couchbase.Settings
                 settings.BucketName = BucketName;
             }
 
-            return new BucketAvailabilityCheck(settings);
+            return new BucketAvailabilityCheck(new AuthorizedHttpClientFactory(Credentials), settings);
         }
     }
 }

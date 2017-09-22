@@ -1,5 +1,5 @@
 ﻿using Nimator.Plugins.Couchbase.Checks;
-using Nimator.Plugins.Couchbase.Models;
+using Nimator.Plugins.Couchbase.Models.Credentials;
 using Nimator.Plugins.Couchbase.Models.Settings;
 
 namespace Nimator.Plugins.Couchbase.Settings
@@ -14,11 +14,10 @@ namespace Nimator.Plugins.Couchbase.Settings
         {
             var settings = new CouchbaseClusterSettings
             {
-                ServerUrl = ServerUrl,
-                Credentials = Credentials
+                ServerUrl = ServerUrl
             };
 
-            return new ServerAvailabilityCheck(settings);
+            return new ServerAvailabilityCheck(new AuthorizedHttpClientFactory(Credentials), settings);
         }
     }
 }

@@ -7,20 +7,22 @@ namespace Nimator.Plugins.Couchbase.Checks
     public class BucketAvailabilityCheck : ICheck
     {
         private readonly CouchbaseClusterSettings _settings;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public BucketAvailabilityCheck(CouchbaseClusterSettings settings)
+        public BucketAvailabilityCheck(IHttpClientFactory httpClientFactory, CouchbaseClusterSettings settings)
         {
             if (settings == null || settings.AreBasicSettingsEmpty)
             {
                 throw new ArgumentException(nameof(_settings));
             }
 
+            _httpClientFactory = httpClientFactory;
             _settings = settings;
         }
 
         public async Task<ICheckResult> RunAsync()
         {
-            using (var httpClient = HttpClientFactory.GetAuthorizedHttpClient(_settings.Credentials))
+            using (var httpClient = _httpClientFactory.GetHttpClient())
             {
                 var url = $"{_settings.ServerUrl}/pools/{_settings.PoolName}/buckets/{_settings.BucketName}";
 
